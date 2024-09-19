@@ -1,0 +1,85 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.0.2'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+ext {
+    groupId = 'org.overture.ftc'
+    artifactId = 'overftclibrc'
+    versionString = '0.0.1'
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace = "${groupId}.${artifactId}"
+    compileSdk 29
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdk 28
+        versionCode 1
+        versionName versionString
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    google()
+    maven{
+        url 'https://frcmaven.wpi.edu/artifactory/release/'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation('org.ejml:ejml-simple:0.43.1') {
+        exclude group: 'org.ejml', module: 'ejml-all'
+    }
+
+    implementation 'org.overture.ftc:overftclib:0.0.1'
+
+    testImplementation(platform('org.junit:junit-bom:5.10.0'))
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.10.0')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.10.0')
+    testImplementation('org.mockito:mockito-core:4.5.1')
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.10.0"
+
+    compileOnly 'org.firstinspires.ftc:Inspection:9.2.0'
+    compileOnly 'org.firstinspires.ftc:RobotCore:9.2.0'
+    testImplementation 'org.firstinspires.ftc:RobotCore:9.2.0'
+    compileOnly 'org.firstinspires.ftc:RobotServer:9.2.0'
+    compileOnly 'org.firstinspires.ftc:Hardware:9.2.0'
+    compileOnly 'org.firstinspires.ftc:FtcCommon:9.2.0'
+    compileOnly 'androidx.appcompat:appcompat:1.7.0'
+}
+
+apply from: 'publish.gradle'

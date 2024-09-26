@@ -1,13 +1,23 @@
-//TEST
+/*
+ * Overftclib
+ * Written by: Santiago Quintana
+ * Owned By: Overture Robotics Group.
+ *
+ * The following Interface is provided as-is in the intention of a long-term modern FTC Library that integrates WPILibJava
+ * devices, logic and references.
+ *
+ * All rights reserved 2024. (R) OVERTURE ROBOTICS GROUP
+ * */
+
 package org.overture.ftc;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.overture.ftc.overftclib.OverDcMotor;
+import org.overture.ftc.overftclib.IOverDcMotor;
 
-public class OverDcMotorRC implements OverDcMotor {
+public class OverDcMotorRC implements IOverDcMotor {
 
     DcMotorEx motorEx;
 
@@ -38,6 +48,27 @@ public class OverDcMotorRC implements OverDcMotor {
     @Override
     public void setMode(RunMode runMode) {
         switch (runMode) {};
+    }
+
+
+    @Override
+    public void setZeroPowerBehavior(ZeroPowerBehavior behavior) {
+        switch (behavior) {};
+    }
+
+    @Override
+    public void setTargetPosition(int i) {
+        motorEx.setTargetPosition(i);
+    }
+
+    @Override
+    public int getTargetPosition() {
+        return 0;
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return 0;
     }
 
 }

@@ -35,14 +35,15 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      - name: Install Android SDK
+      - name: Install Android SDK Command-line Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y android-sdk
-
-      - name: Accept Android SDK Licenses
-        run: |
-          yes | sdkmanager --licenses
+          mkdir -p ~/android-sdk/cmdline-tools
+          curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip sdk-tools.zip -d ~/android-sdk/cmdline-tools
+          echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$PATH" >> $GITHUB_ENV
+          yes | ~/android-sdk/cmdline-tools/cmdline-tools/bin/sdkmanager --licenses
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -52,7 +53,7 @@ jobs:
           git config --global --add safe.directory /__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}
 
       - name: Set SDK directory in local.properties
-        run: echo "sdk.dir=/usr/lib/android-sdk" > local.properties
+        run: echo "sdk.dir=$HOME/android-sdk" > local.properties
 
       - name: Set version
         run: sed -i "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
@@ -68,6 +69,7 @@ jobs:
         with:
           name: ${{ matrix.artifact-name }}
           path: build/allOutputs
+
 
 
   build-host:

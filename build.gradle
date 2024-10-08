@@ -98,18 +98,21 @@ dependencies {
 
 spotless {
     java {
-        target fileTree('.') {
-            include '**/*.java'
-            exclude '**/build/**', '**/build-*/**'
-        }
-        eclipse().configFile('path/to/eclipse-format-config.xml') // Puedes usar un archivo de configuración de Eclipse si lo tienes
-        googleJavaFormat() // Puedes elegir el formato que prefieras, por ejemplo, Google Java Format
-        importOrder() // Para ordenar imports si lo deseas
-        removeUnusedImports()
-        indentWithSpaces(4)
-        trimTrailingWhitespace()
-        endWithNewline()
+        target 'src/**/*.java' // Apunta a los archivos Java en tu proyecto (cambia el path si es necesario)
+
+        // Usa google-java-format para el formateo
+        googleJavaFormat('1.10.0') // Asegúrate de usar una versión compatible, como 1.10.0
+
+        // Opcionalmente puedes habilitar estas otras herramientas
+        importOrder() // Para ordenar los imports alfabéticamente
+        removeUnusedImports() // Para eliminar imports no usados
+
+        // Formato adicional
+        indentWithSpaces(4) // Indentación con 4 espacios
+        trimTrailingWhitespace() // Elimina espacios en blanco finales
+        endWithNewline() // Asegura nueva línea al final de los archivos
     }
+
     groovyGradle {
         target fileTree('.') {
             include '**/*.gradle'
@@ -120,6 +123,7 @@ spotless {
         trimTrailingWhitespace()
         endWithNewline()
     }
+
     format 'misc', {
         target fileTree('.') {
             include '**/*.md', '**/.gitignore'
@@ -130,6 +134,7 @@ spotless {
         endWithNewline()
     }
 }
+
 
 
 apply from: 'publish.gradle'

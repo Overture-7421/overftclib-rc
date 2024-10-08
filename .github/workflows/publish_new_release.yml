@@ -40,6 +40,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y android-sdk
 
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | sdkmanager --licenses
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -64,6 +68,7 @@ jobs:
         with:
           name: ${{ matrix.artifact-name }}
           path: build/allOutputs
+
 
   build-host:
     strategy:

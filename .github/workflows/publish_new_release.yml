@@ -35,12 +35,20 @@ jobs:
           submodules: true
           fetch-depth: 0
 
+      - name: Install Android SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y android-sdk
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Fetch all history and metadata
         run: |
           git config --global --add safe.directory /__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}
+
+      - name: Set SDK directory in local.properties
+        run: echo "sdk.dir=/usr/lib/android-sdk" > local.properties
 
       - name: Set version
         run: sed -i "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
@@ -161,7 +169,7 @@ jobs:
         run: cp -r ~/releases/maven/development/org overture.github.io/overftclibrc/repo/
 
       - name: Update json
-        run: |                                                                                                                                                       
+        run: |
           sed -i 's/"version"\: \"[0-9]*\.[0-9]*\.[0-9]*\"/"version": "${{ github.event.inputs.version }}"/g' overftclibrc.github.io/overftclibrc/overftclibrc.json  
 
       - name: Commit
@@ -177,7 +185,7 @@ jobs:
           github_token: ${{ secrets.ACCESS_TOKEN }}
           directory: overftclibrc.github.io
 
-  publish-relase:
+  publish-release:
     name: Publish Release
     needs: [upload]
     runs-on: ubuntu-latest
@@ -195,7 +203,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: overftclibrc ${{ github.event.inputs.version }}
-          files: Ooverftclibrc-${{ github.event.inputs.version }}.zip
+          files: overftclibrc-${{ github.event.inputs.version }}.zip
           tag_name: ${{ github.event.inputs.version }}
           generate_release_notes: true
           prerelease: false
@@ -211,4 +219,3 @@ jobs:
           generate_release_notes: true
           prerelease: true
           make_latest: false
-

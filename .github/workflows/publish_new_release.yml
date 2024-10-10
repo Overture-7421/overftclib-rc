@@ -45,9 +45,6 @@ jobs:
           echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$PATH" >> $GITHUB_ENV
           yes | ~/android-sdk/cmdline-tools/cmdline-tools/bin/sdkmanager --licenses
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: Fetch all history and metadata
         run: |
           git config --global --add safe.directory /__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}
@@ -56,7 +53,10 @@ jobs:
         run: echo "sdk.dir=$HOME/android-sdk" > local.properties
 
       - name: Set version
-        run: sed -i "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
+        run: sed -i "s/0.0.1/${{ github.event.inputs.version }}/g" publish.gradle
+
+      - name: Grant execute permission for gradlew spotless
+        run: chmod +x gradlew
 
       - name: Ensure spotless is applied
         run: ./gradlew spotlessApply
@@ -102,13 +102,16 @@ jobs:
 
       - name: Set version
         if: ${{ matrix.os-name != 'macos' }}
-        run: sed -i "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
+        run: sed -i "s/0.0.1/${{ github.event.inputs.version }}/g" publish.gradle
         working-directory: ./
 
       - name: Set version (mac)
         if: ${{ matrix.os-name == 'macos' }}
-        run: sed -i '' "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
+        run: sed -i '' "s/0.0.1/${{ github.event.inputs.version }}/g" publish.gradle
         working-directory: ./
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Ensure spotless is applied
         run: ./gradlew spotlessApply
@@ -149,7 +152,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: OvertureLib-${{ github.event.inputs.version }}
+          name: overftclibrc-${{ github.event.inputs.version }}
           path: ~/releases/
 
   upload:
@@ -159,7 +162,7 @@ jobs:
     steps:
       - name: Clone Pages
         run: |
-          git clone https://github.com/SantiQ0905/overftclibrc.github.io.git
+          git clone https://github.com/Overture-7421/overture-7421.github.io.git
 
       - name : Set up git
         run: |
@@ -172,25 +175,34 @@ jobs:
           name: overftclibrc-${{ github.event.inputs.version }}
           path: ~/releases/
 
-      - name: Copy artifacts
-        run: cp -r ~/releases/maven/development/org overture.github.io/overftclibrc/repo/
+      - name: Ensure the target directory exists
+        run: mkdir -p overture-7421.github.io/overftclibrc/repo/
 
-      - name: Update json
+      - name: Copy artifacts
+        run: cp -r ~/releases/maven/development/org overture-7421.github.io/overftclibrc/repo/
+
+      - name: Check if overftclibrc.json exists
         run: |
-          sed -i 's/"version"\: \"[0-9]*\.[0-9]*\.[0-9]*\"/"version": "${{ github.event.inputs.version }}"/g' overftclibrc.github.io/overftclibrc/overftclibrc.json  
+          if [ ! -f overture-7421.github.io/overftclibrc/overftclibrc.json ]; then
+            echo '{ "version": "0.0.0" }' > overture-7421.github.io/overftclibrc/overftclibrc.json
+          fi
+
+      - name: Update version in JSON file
+        run: |
+          sed -i 's/"version": "[0-9]*\.[0-9]*\.[0-9]*"/"version": "${{ github.event.inputs.version }}"/g' overture-7421.github.io/overftclibrc/overftclibrc.json
 
       - name: Commit
         run: |
-          cd overftclibrc.github.io
+          cd overture-7421.github.io
           git add .
           git commit -m "Upgrade to ${{ github.event.inputs.version }}"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          repository: overftclibrc/overftclibrc.github.io
+          repository: overture-7421/overture-7421.github.io
           github_token: ${{ secrets.ACCESS_TOKEN }}
-          directory: overftclibrc.github.io
+          directory: overture-7421.github.io
 
   publish-release:
     name: Publish Release

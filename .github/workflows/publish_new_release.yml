@@ -14,60 +14,6 @@ on:
         default: false
 
 jobs:
-  build-docker:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - container: wpilib/ubuntu-base:22.04
-            artifact-name: Linux
-            build-options: ""
-    name: "Build - ${{ matrix.artifact-name }}"
-    runs-on: ubuntu-latest
-    container: ${{ matrix.container }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 0
-
-      - name: Install Android SDK Command-line Tools
-        run: |
-          sudo apt-get update
-          mkdir -p ~/android-sdk/cmdline-tools
-          curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-          unzip sdk-tools.zip -d ~/android-sdk/cmdline-tools
-          echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$PATH" >> $GITHUB_ENV
-          yes | ~/android-sdk/cmdline-tools/cmdline-tools/bin/sdkmanager --licenses
-
-      - name: Fetch all history and metadata
-        run: |
-          git config --global --add safe.directory /__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}
-
-      - name: Set SDK directory in local.properties
-        run: echo "sdk.dir=$HOME/android-sdk" > local.properties
-
-      - name: Set version
-        run: sed -i "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
-
-      - name: Grant execute permission for gradlew spotless
-        run: chmod +x gradlew
-
-      - name: Ensure spotless is applied
-        run: ./gradlew spotlessApply
-
-      - name: Build with Gradle
-        run: ./gradlew build -PpubVersion=${{ github.event.inputs.version }}
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.artifact-name }}
-          path: build/allOutputs
-
-
-
   build-host:
     strategy:
       fail-fast: false
@@ -109,9 +55,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Ensure spotless is applied
-        run: ./gradlew spotlessApply
-
       - name: Build with Gradle
         run: ./gradlew build -Pbuildalldesktop -PreleaseMode
         working-directory: ./
@@ -124,7 +67,7 @@ jobs:
 
   combine:
     name: Combine
-    needs: [build-docker, build-host]
+    needs: [build-host]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

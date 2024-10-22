@@ -3,9 +3,9 @@ apply plugin: 'maven-publish'
 publishing {
     publications {
         register(MavenPublication) {
-            groupId = project.groupId
-            artifactId = project.artifactId
-            version = project.versionString
+            groupId = 'com.overture.ftc'
+            artifactId = 'overftclib-rc'
+            version = '0.0.0'
 
             afterEvaluate {
                 from components.release

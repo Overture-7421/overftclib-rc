@@ -57,6 +57,7 @@ jobs:
 
   upload:
     name: Upload to GitHub
+    depends: [build-host]
     runs-on: ubuntu-latest
     steps:
       - name: Clone Pages

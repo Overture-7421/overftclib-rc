@@ -105,7 +105,7 @@ jobs:
           name: overftclib-rc-${{ github.event.inputs.version }}
 
       - name: Zip artifacts
-        run: zip -r overftclib-rc-${{ github.event.inputs.version }}.zip maven/development/com/overture/ftc/overftclib
+        run: zip -r overftclib-rc-${{ github.event.inputs.version }}.zip com/overture/ftc/overftclib
 
       - name: Create Release
         if: github.event.inputs.prerelease == 'false'

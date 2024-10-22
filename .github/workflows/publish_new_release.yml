@@ -19,13 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: windows-2022
+          - os: windows-latest
             os-name: windows
             artifact-name: Win64
-            architecture: x64
-          - os: macos-14
-            os-name: macos
-            artifact-name: macOS
             architecture: x64
     name: "Build - ${{ matrix.artifact-name }}"
     runs-on: ${{ matrix.os }}
@@ -43,56 +39,21 @@ jobs:
           architecture: ${{ matrix.architecture }}
 
       - name: Set version
-        if: ${{ matrix.os-name != 'macos' }}
         run: sed -i "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
-        working-directory: ./
-
-      - name: Set version (mac)
-        if: ${{ matrix.os-name == 'macos' }}
-        run: sed -i '' "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
         working-directory: ./
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -Pbuildalldesktop -PreleaseMode
+        run: ./gradlew publish -Pbuildalldesktop -PreleaseMode
         working-directory: ./
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact-name }}
-          path: build/outputs
-
-  combine:
-    name: Combine
-    needs: [build-host]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: wpilibsuite/build-tools
-
-      - uses: actions/download-artifact@v4
-        with:
-          path: combiner/products/build/outputs
-
-      - name: Flatten Artifacts
-        run: rsync -a --delete combiner/products/build/outputs/*/* combiner/products/build/outputs/
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: 17
-
-      - name: Combine
-        run: ./gradlew publish -Pthirdparty
-        working-directory: combiner
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: overftclib-${{ github.event.inputs.version }}
-          path: ~/releases/
+          path: build/repo
 
   upload:
     name: Upload to GitHub
@@ -118,7 +79,7 @@ jobs:
         run: mkdir -p overture-7421.github.io/overturelib/repo/
 
       - name: Copy artifacts
-        run: cp -r ~/releases/maven/development/com overture-7421.github.io/overturelib/repo/
+        run: cp -r ~/releases/com overture-7421.github.io/overturelib/repo/
 
       - name: Commit
         run: |
@@ -141,17 +102,17 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: overftclib-${{ github.event.inputs.version }}
+          name: overftclib-rc-${{ github.event.inputs.version }}
 
       - name: Zip artifacts
-        run: zip -r overftclib-${{ github.event.inputs.version }}.zip maven/development/com/overture/ftc/overftclib
+        run: zip -r overftclib-rc-${{ github.event.inputs.version }}.zip maven/development/com/overture/ftc/overftclib
 
       - name: Create Release
         if: github.event.inputs.prerelease == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          name: overftclib ${{ github.event.inputs.version }}
-          files: overftclib-${{ github.event.inputs.version }}.zip
+          name: overftclib-rc ${{ github.event.inputs.version }}
+          files: overftclib-rc-${{ github.event.inputs.version }}.zip
           tag_name: ${{ github.event.inputs.version }}
           generate_release_notes: true
           prerelease: false
@@ -161,8 +122,8 @@ jobs:
         if: github.event.inputs.prerelease == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          name: overftclib ${{ github.event.inputs.version }}
-          files: overftclib-${{ github.event.inputs.version }}.zip
+          name: overftclib-rc ${{ github.event.inputs.version }}
+          files: overftclib-rc-${{ github.event.inputs.version }}.zip
           tag_name: ${{ github.event.inputs.version }}
           generate_release_notes: true
           prerelease: true

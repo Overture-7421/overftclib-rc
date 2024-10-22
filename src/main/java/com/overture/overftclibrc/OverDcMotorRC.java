@@ -9,7 +9,7 @@
  * All rights reserved 2024. (R) OVERTURE ROBOTICS GROUP
  * */
 
-package org.overture.overftclibrc;
+package com.overture.overftclibrc;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;

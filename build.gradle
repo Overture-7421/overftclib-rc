@@ -91,44 +91,6 @@ dependencies {
 
 }
 
-spotless {
-    java {
-        target 'src/**/*.java' // Apunta a los archivos Java en tu proyecto (cambia el path si es necesario)
-
-        // Usa google-java-format para el formateo
-        googleJavaFormat('1.10.0') // Asegúrate de usar una versión compatible, como 1.10.0
-
-        // Opcionalmente puedes habilitar estas otras herramientas
-        importOrder() // Para ordenar los imports alfabéticamente
-        removeUnusedImports() // Para eliminar imports no usados
-
-        // Formato adicional
-        indentWithSpaces(4) // Indentación con 4 espacios
-        trimTrailingWhitespace() // Elimina espacios en blanco finales
-        endWithNewline() // Asegura nueva línea al final de los archivos
-    }
-
-    groovyGradle {
-        target fileTree('.') {
-            include '**/*.gradle'
-            exclude '**/build/**', '**/build-*/**'
-        }
-        greclipse()
-        indentWithSpaces(4)
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
-
-    format 'misc', {
-        target fileTree('.') {
-            include '**/*.md', '**/.gitignore'
-            exclude '**/build/**', '**/build-*/**'
-        }
-        trimTrailingWhitespace()
-        indentWithSpaces(4)
-        endWithNewline()
-    }
-}
 
 
 

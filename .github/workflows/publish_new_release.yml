@@ -21,7 +21,7 @@ jobs:
         include:
           - os: windows-latest
             os-name: windows
-            artifact-name: Win64
+            artifact-name: overftclib-rc-${{ github.event.inputs.version }}
             architecture: x64
     name: "Build - ${{ matrix.artifact-name }}"
     runs-on: ${{ matrix.os }}
@@ -72,7 +72,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: overftclib-${{ github.event.inputs.version }}
+          name: overftclib-rc-${{ github.event.inputs.version }}
           path: ~/releases/
 
       - name: Ensure the target directory exists

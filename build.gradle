@@ -56,6 +56,11 @@ android {
             withSourcesJar()
         }
     }
+
+    lint{
+        baseline = file("lint-baseline.xml")
+    }
+
 }
 
 repositories {

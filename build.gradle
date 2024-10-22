@@ -48,7 +48,7 @@ android {
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     publishing {
@@ -60,10 +60,14 @@ android {
 
 repositories {
     mavenCentral()
-    mavenLocal()
+    //mavenLocal()
     google()
     maven{
         url 'https://frcmaven.wpi.edu/artifactory/release/'
+    }
+
+    maven{
+        url 'https://overture-7421.github.io/overturelib/repo'
     }
 
 }
@@ -74,17 +78,7 @@ dependencies {
         exclude group: 'org.ejml', module: 'ejml-all'
     }
 
-    api 'org.overture.ftc:overftclib:0.0.1'
-
-    /*testImplementation(platform('org.junit:junit-bom:5.10.0'))
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.10.0')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.10.0')
-    testImplementation('org.mockito:mockito-core:4.5.1')
-    testImplementation "org.junit.jupiter:junit-jupiter-params:5.10.0"*/
-
-
-
-
+    api 'com.overture.ftc:overftclib:0.0.6'
 
     compileOnly 'org.firstinspires.ftc:Inspection:9.2.0'
     compileOnly 'org.firstinspires.ftc:RobotCore:9.2.0'

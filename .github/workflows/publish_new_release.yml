@@ -19,10 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - container: wpilib/roborio-cross-ubuntu:2024-22.04
-            artifact-name: Athena
-            build-options: "-Ponlylinuxathena"
-
           - container: wpilib/ubuntu-base:22.04
             artifact-name: Linux
             build-options: ""
@@ -53,7 +49,7 @@ jobs:
         run: echo "sdk.dir=$HOME/android-sdk" > local.properties
 
       - name: Set version
-        run: sed -i "s/0.0.1/${{ github.event.inputs.version }}/g" publish.gradle
+        run: sed -i "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
 
       - name: Grant execute permission for gradlew spotless
         run: chmod +x gradlew
@@ -62,7 +58,7 @@ jobs:
         run: ./gradlew spotlessApply
 
       - name: Build with Gradle
-        run: ./gradlew build -PreleaseMode ${{ matrix.build-options }}
+        run: ./gradlew build -PpubVersion=${{ github.event.inputs.version }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -102,12 +98,12 @@ jobs:
 
       - name: Set version
         if: ${{ matrix.os-name != 'macos' }}
-        run: sed -i "s/0.0.1/${{ github.event.inputs.version }}/g" publish.gradle
+        run: sed -i "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
         working-directory: ./
 
       - name: Set version (mac)
         if: ${{ matrix.os-name == 'macos' }}
-        run: sed -i '' "s/0.0.1/${{ github.event.inputs.version }}/g" publish.gradle
+        run: sed -i '' "s/0.0.0/${{ github.event.inputs.version }}/g" publish.gradle
         working-directory: ./
 
       - name: Grant execute permission for gradlew
@@ -152,7 +148,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: overftclibrc-${{ github.event.inputs.version }}
+          name: overftclib-${{ github.event.inputs.version }}
           path: ~/releases/
 
   upload:
@@ -172,24 +168,14 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: overftclibrc-${{ github.event.inputs.version }}
+          name: overftclib-${{ github.event.inputs.version }}
           path: ~/releases/
 
       - name: Ensure the target directory exists
-        run: mkdir -p overture-7421.github.io/overftclibrc/repo/
+        run: mkdir -p overture-7421.github.io/overturelib/repo/
 
       - name: Copy artifacts
-        run: cp -r ~/releases/maven/development/org overture-7421.github.io/overftclibrc/repo/
-
-      - name: Check if overftclibrc.json exists
-        run: |
-          if [ ! -f overture-7421.github.io/overftclibrc/overftclibrc.json ]; then
-            echo '{ "version": "0.0.0" }' > overture-7421.github.io/overftclibrc/overftclibrc.json
-          fi
-
-      - name: Update version in JSON file
-        run: |
-          sed -i 's/"version": "[0-9]*\.[0-9]*\.[0-9]*"/"version": "${{ github.event.inputs.version }}"/g' overture-7421.github.io/overftclibrc/overftclibrc.json
+        run: cp -r ~/releases/maven/development/com overture-7421.github.io/overturelib/repo/
 
       - name: Commit
         run: |
@@ -212,17 +198,17 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: overftclibrc-${{ github.event.inputs.version }}
+          name: overftclib-${{ github.event.inputs.version }}
 
       - name: Zip artifacts
-        run: zip -r overftclibrc-${{ github.event.inputs.version }}.zip maven/development/org/overture/ftc/overftclibrc
+        run: zip -r overftclib-${{ github.event.inputs.version }}.zip maven/development/com/overture/ftc/overftclib
 
       - name: Create Release
         if: github.event.inputs.prerelease == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          name: overftclibrc ${{ github.event.inputs.version }}
-          files: overftclibrc-${{ github.event.inputs.version }}.zip
+          name: overftclib ${{ github.event.inputs.version }}
+          files: overftclib-${{ github.event.inputs.version }}.zip
           tag_name: ${{ github.event.inputs.version }}
           generate_release_notes: true
           prerelease: false
@@ -232,8 +218,8 @@ jobs:
         if: github.event.inputs.prerelease == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          name: overftclibrc ${{ github.event.inputs.version }}
-          files: overftclibrc-${{ github.event.inputs.version }}.zip
+          name: overftclib ${{ github.event.inputs.version }}
+          files: overftclib-${{ github.event.inputs.version }}.zip
           tag_name: ${{ github.event.inputs.version }}
           generate_release_notes: true
           prerelease: true

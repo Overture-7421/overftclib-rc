@@ -62,15 +62,15 @@ android {
 
 repositories {
     mavenCentral()
-    //mavenLocal()
+    mavenLocal()
     google()
     maven{
         url 'https://frcmaven.wpi.edu/artifactory/release/'
     }
 
-    maven{
+    /*maven{
         url 'https://overture-7421.github.io/overturelib/repo'
-    }
+    }*/
 
 }
 
@@ -80,7 +80,8 @@ dependencies {
         exclude group: 'org.ejml', module: 'ejml-all'
     }
 
-    api 'com.overture.ftc:overftclib:0.0.6'
+    //api 'com.overture.ftc:overftclib:0.0.6'
+    api 'com.overture.ftc:overftclib:0.0.0'
 
     compileOnly 'org.firstinspires.ftc:Inspection:9.2.0'
     compileOnly 'org.firstinspires.ftc:RobotCore:9.2.0'
@@ -91,8 +92,10 @@ dependencies {
     compileOnly 'androidx.appcompat:appcompat:1.7.0'
 
 }
-
-
-
+// Specify the Java version
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 apply from: 'publish.gradle'

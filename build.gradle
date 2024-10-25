@@ -26,11 +26,12 @@ apply plugin: 'com.android.library'
 
 android {
     namespace = "${groupId}.${artifactId}"
-    compileSdk 25
+    compileSdk 29
 
     defaultConfig {
-        minSdkVersion 25
-        targetSdk 25
+        minSdkVersion 24
+        //noinspection ExpiredTargetSdkVersion
+        targetSdk 28
         versionCode 1
         versionName versionString
 

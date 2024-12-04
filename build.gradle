@@ -80,8 +80,8 @@ dependencies {
         exclude group: 'org.ejml', module: 'ejml-all'
     }
 
-    //api 'com.overture.ftc:overftclib:0.0.6'
-    api 'com.overture.ftc:overftclib:0.0.0'
+
+    api 'com.overture.ftc:overftclib:0.1.0'
 
     compileOnly 'org.firstinspires.ftc:Inspection:9.2.0'
     compileOnly 'org.firstinspires.ftc:RobotCore:9.2.0'

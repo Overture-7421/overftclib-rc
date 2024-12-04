@@ -1,5 +1,5 @@
 /*
- * Overftclib
+ * Overftclib-RC
  * Written by: Santiago Quintana
  * Owned By: Overture Robotics Group.
  *
@@ -13,7 +13,7 @@ package com.overture.overftclibrc;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.overture.ftc.overftclib.IOverDcMotor;
+import com.overture.ftc.overftclib.Devices.IOverDcMotor;
 
 public class OverDcMotorRC implements IOverDcMotor {
 
@@ -47,7 +47,6 @@ public class OverDcMotorRC implements IOverDcMotor {
     public void setMode(RunMode runMode) {
         switch (runMode) {};
     }
-
 
     @Override
     public void setZeroPowerBehavior(ZeroPowerBehavior behavior) {

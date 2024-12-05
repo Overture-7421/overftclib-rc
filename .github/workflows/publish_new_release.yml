@@ -50,8 +50,8 @@ jobs:
         run: ./gradlew publish -Pbuildalldesktop -PreleaseMode
         working-directory: ./
 
-      - name: Debug directory structure
-        run: ls -R build/repo/
+      - name: Debug build directory
+        run: ls -R build/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -77,20 +77,20 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ${{ matrix.artifact-name }}
-          path: ~/releases/
+          path: ./releases/
 
-      - name: Debug artifact structure
-        run: ls -R ~/releases/
+      - name: Debug downloaded directory
+        run: ls -R ./releases/
 
       - name: Ensure the target directory exists
         run: mkdir -p overture-7421.github.io/overturelib/repo/
 
       - name: Copy artifacts
         run: |
-          if [ -d "~/releases/build/repo" ]; then
-            cp -r ~/releases/build/repo/com overture-7421.github.io/overturelib/repo/
+          if [ -d "./releases/com" ]; then
+            cp -r ./releases/com overture-7421.github.io/overturelib/repo/
           else
-            echo "Artifacts not found in ~/releases/build/repo";
+            echo "Artifacts not found in ./releases/com";
             exit 1;
           fi
 
@@ -119,10 +119,10 @@ jobs:
 
       - name: Check and zip artifacts
         run: |
-          if [ -d "build/repo/com/overture/ftc/overftclib" ]; then
-            zip -r overftclib-rc-${{ github.event.inputs.version }}.zip build/repo/com/overture/ftc/overftclib;
+          if [ -d "./releases/com/overture/ftc/overftclib" ]; then
+            zip -r overftclib-rc-${{ github.event.inputs.version }}.zip ./releases/com/overture/ftc/overftclib;
           else
-            echo "Directory not found: build/repo/com/overture/ftc/overftclib";
+            echo "Directory not found: ./releases/com/overture/ftc/overftclib";
             exit 1;
           fi
 

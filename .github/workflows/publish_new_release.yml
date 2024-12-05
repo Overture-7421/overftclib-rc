@@ -79,11 +79,20 @@ jobs:
           name: ${{ matrix.artifact-name }}
           path: ~/releases/
 
+      - name: Debug artifact structure
+        run: ls -R ~/releases/
+
       - name: Ensure the target directory exists
         run: mkdir -p overture-7421.github.io/overturelib/repo/
 
       - name: Copy artifacts
-        run: cp -r ~/releases/com overture-7421.github.io/overturelib/repo/
+        run: |
+          if [ -d "~/releases/build/repo" ]; then
+            cp -r ~/releases/build/repo/com overture-7421.github.io/overturelib/repo/
+          else
+            echo "Artifacts not found in ~/releases/build/repo";
+            exit 1;
+          fi
 
       - name: Commit
         run: |

@@ -32,6 +32,7 @@ jobs:
 
       - name: Fetch all history and metadata
         run: git fetch --prune --unshallow
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -48,6 +49,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew publish -Pbuildalldesktop -PreleaseMode
         working-directory: ./
+
+      - name: Debug directory structure
+        run: ls -R build/repo/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -72,7 +76,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: overftclib-rc-${{ github.event.inputs.version }}
+          name: ${{ matrix.artifact-name }}
           path: ~/releases/
 
       - name: Ensure the target directory exists
@@ -102,10 +106,16 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: overftclib-rc-${{ github.event.inputs.version }}
+          name: ${{ matrix.artifact-name }}
 
-      - name: Zip artifacts
-        run: zip -r overftclib-rc-${{ github.event.inputs.version }}.zip com/overture/ftc/overftclib
+      - name: Check and zip artifacts
+        run: |
+          if [ -d "build/repo/com/overture/ftc/overftclib" ]; then
+            zip -r overftclib-rc-${{ github.event.inputs.version }}.zip build/repo/com/overture/ftc/overftclib;
+          else
+            echo "Directory not found: build/repo/com/overture/ftc/overftclib";
+            exit 1;
+          fi
 
       - name: Create Release
         if: github.event.inputs.prerelease == 'false'

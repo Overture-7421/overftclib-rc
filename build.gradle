@@ -68,9 +68,9 @@ repositories {
         url 'https://frcmaven.wpi.edu/artifactory/release/'
     }
 
-    /*maven{
+    maven{
         url 'https://overture-7421.github.io/overturelib/repo'
-    }*/
+    }
 
 }
 

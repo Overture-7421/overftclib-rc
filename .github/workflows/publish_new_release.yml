@@ -86,13 +86,7 @@ jobs:
         run: mkdir -p overture-7421.github.io/overturelib/repo/
 
       - name: Copy artifacts
-        run: |
-          if [ -d "./releases/com" ]; then
-            cp -r ./releases/com overture-7421.github.io/overturelib/repo/
-          else
-            echo "Artifacts not found in ./releases/com";
-            exit 1;
-          fi
+        run: cp -r ~/releases/maven/development/com overture-7421.github.io/overturelib-rc/repo/
 
       - name: Commit
         run: |

@@ -86,7 +86,7 @@ jobs:
         run: mkdir -p overture-7421.github.io/overturelib/repo/
 
       - name: Copy artifacts
-        run: cp -r ~/releases/maven/development/com overture-7421.github.io/overturelib-rc/repo/
+        run: cp -r ~/releases/maven/development/com overture-7421.github.io/overturelib/repo/
 
       - name: Commit
         run: |

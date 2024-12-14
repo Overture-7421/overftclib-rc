@@ -19,7 +19,7 @@ plugins {
 ext {
     groupId = 'org.overture.ftc'
     artifactId = 'overftclibrc'
-    versionString = '0.0.1'
+    versionString = '2025.0.1'
 }
 
 apply plugin: 'com.android.library'
@@ -81,7 +81,9 @@ dependencies {
     }
 
 
-    api 'com.overture.ftc:overftclib:0.1.0'
+    api 'com.overture.ftc:overftclib:2025.0.1'
+    implementation 'org.ftclib.ftclib:core:2.1.1'
+
 
     compileOnly 'org.firstinspires.ftc:Inspection:9.2.0'
     compileOnly 'org.firstinspires.ftc:RobotCore:9.2.0'

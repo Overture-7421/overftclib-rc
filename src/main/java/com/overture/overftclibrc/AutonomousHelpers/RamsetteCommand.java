@@ -10,7 +10,6 @@ import com.arcrobotics.ftclib.util.Timing.Timer;
 import java.util.concurrent.TimeUnit;
 
 public class RamsetteCommand extends CommandBase {
-
     private final RamseteController controller;
     private final Trajectory trajectory;
     private final Timer timer;

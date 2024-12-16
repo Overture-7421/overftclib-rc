@@ -116,10 +116,10 @@ jobs:
 
       - name: Check and zip artifacts
         run: |
-          if [ -d "./releases/com/overture/ftc/overftclib" ]; then
-            zip -r overftclib-rc-${{ github.event.inputs.version }}.zip ./releases/com/overture/ftc/overftclib;
+          if [ -d "./releases/overftclib-rc-2025.0.1/com/overture/ftc/overftclib-rc" ]; then
+            zip -r overftclib-rc-${{ github.event.inputs.version }}.zip ./releases/overftclib-rc-2025.0.1/com/overture/ftc/overftclib-rc;
           else
-            echo "Directory not found: ./releases/com/overture/ftc/overftclib";
+            echo "Directory not found: ./releases/overftclib-rc-2025.0.1/com/overture/ftc/overftclib-rc";
             exit 1;
           fi
 

@@ -114,6 +114,9 @@ jobs:
         with:
           name: ${{ matrix.artifact-name }}
 
+      - name: Debug release directory structure
+        run: ls -R ./releases
+
       - name: Check and zip artifacts
         run: |
           if [ -d "./releases/overftclib-rc-2025.0.1/com/overture/ftc/overftclib-rc/2025.0.1" ]; then
